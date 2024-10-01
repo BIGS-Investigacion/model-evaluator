@@ -1,0 +1,8 @@
+#Crear un entorno virtual
+python3 -m venv .venv
+source .venv/bin/activate
+#pip install poetry
+#poetry shell
+#poetry install
+export TTI_EVAL_CACHE_PATH=$PWD/.cache
+export TTI_EVAL_OUTPUT_PATH=$PWD/output
