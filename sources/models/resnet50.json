@@ -1,0 +1,5 @@
+{
+  "model_type": "HFModel",
+  "title": "Resnet50-CLAM",
+  "title_in_source":  "microsoft/resnet-50"
+}
