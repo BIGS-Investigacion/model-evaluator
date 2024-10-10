@@ -205,4 +205,4 @@ output
 .DS_Store
 
 #Others
-token.txt
+dev-setup.sh
