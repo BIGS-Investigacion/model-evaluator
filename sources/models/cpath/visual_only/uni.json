@@ -1,5 +1,5 @@
 {
-  "model_type": "HFModel",
+  "model_type": "HFModel_visual_only",
   "title": "UNI",
   "title_in_source":  "MahmoodLab/UNI"
 }

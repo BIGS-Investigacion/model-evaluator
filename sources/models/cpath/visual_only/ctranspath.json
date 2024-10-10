@@ -1,5 +1,5 @@
 {
-  "model_type": "HFModel",
+  "model_type": "HFModel_visual_only",
   "title": "CTransPath",
   "title_in_source":  "jamesdolezal/CTransPath"
 }

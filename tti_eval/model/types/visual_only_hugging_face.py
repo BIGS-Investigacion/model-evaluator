@@ -13,6 +13,7 @@ from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
 from tti_eval.model import Model
 
+
 #Hay que fijar el tema de la clase HFModel para trabajar con modelos visuales de Hugging Face
 class VisualHFModel(Model):
     def __init__(
