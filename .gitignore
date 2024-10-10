@@ -204,5 +204,5 @@ output
 # Mac's specifics
 .DS_Store
 
-#Others
-dev-setup.sh
+#others
+token.txt

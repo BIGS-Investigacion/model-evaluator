@@ -7,7 +7,6 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoModel as HF_AutoModel
 from transformers import AutoProcessor as HF_AutoProcessor
-from transformers import AutoTokenizer as HF_AutoTokenizer
 
 from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
@@ -56,25 +55,25 @@ class VisualHFModel(Model):
         self.model = HF_AutoModel.from_pretrained(self.title_in_source, cache_dir=self._cache_dir).to(self.device)
         load_result = HF_AutoProcessor.from_pretrained(self.title_in_source, cache_dir=self._cache_dir)
         self.processor = load_result[0] if isinstance(load_result, tuple) else load_result
-        self.tokenizer = HF_AutoTokenizer.from_pretrained(self.title_in_source, cache_dir=self._cache_dir)
+        #self.tokenizer = HF_AutoTokenizer.from_pretrained(self.title_in_source, cache_dir=self._cache_dir)
 
     def build_embedding(self, dataloader: DataLoader) -> tuple[EmbeddingArray, EmbeddingArray, ClassArray]:
         all_image_embeddings = []
         all_labels = []
         with torch.inference_mode():
             _dataset: Dataset = dataloader.dataset
-            inputs = self.tokenizer(_dataset.text_queries, padding=True, return_tensors="pt").to(self.device)
-            class_features = self.model.get_text_features(**inputs)
-            normalized_class_features = class_features / class_features.norm(p=2, dim=-1, keepdim=True)
-            class_embeddings = normalized_class_features.numpy(force=True)
+            #inputs = self.tokenizer(_dataset.text_queries, padding=True, return_tensors="pt").to(self.device)
+            #class_features = self.model.get_text_features(**inputs)
+            #normalized_class_features = class_features / class_features.norm(p=2, dim=-1, keepdim=True)
+            #class_embeddings = normalized_class_features.numpy(force=True)
             for batch in tqdm(
                 dataloader,
                 desc=f"Embedding ({_dataset.split}) {_dataset.title} dataset with {self.title}",
             ):
-                image_features = self.model.get_image_features(pixel_values=batch["pixel_values"].to(self.device))
+                image_features = self.model(pixel_values=batch["pixel_values"].to(self.device)).pooler_output.squeeze()
                 normalized_image_features = (image_features / image_features.norm(p=2, dim=-1, keepdim=True)).squeeze()
                 all_image_embeddings.append(normalized_image_features)
                 all_labels.append(batch["labels"])
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
-        return image_embeddings, class_embeddings, labels
+        return image_embeddings, image_embeddings, labels

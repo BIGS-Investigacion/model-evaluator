@@ -377,6 +377,7 @@ However, all embeddings previously built with that model will remain intact and 
    export TTI_EVAL_CACHE_PATH=$PWD/.cache
    export TTI_EVAL_OUTPUT_PATH=$PWD/output
    export ENCORD_SSH_KEY_PATH=<path_to_the_encord_ssh_key_file>
+   export HF_TOKEN=<Your token in hugginface>
    ```
 
 ## Contributing
