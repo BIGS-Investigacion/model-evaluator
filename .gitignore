@@ -203,3 +203,6 @@ output
 
 # Mac's specifics
 .DS_Store
+
+#Others
+token.txt
