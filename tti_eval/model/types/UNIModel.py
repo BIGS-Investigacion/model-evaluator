@@ -29,4 +29,4 @@ class UNIModel(VisualHFModel):
         )
         self.tokenizer = open_clip.get_tokenizer(model_name=self.title_in_source)
 
-    
+
