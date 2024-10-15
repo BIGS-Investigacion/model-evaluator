@@ -1,5 +1,5 @@
 {
-  "model_type": "HFModel",
+  "model_type": "OpenCLIPModel",
   "title": "biomed",
-  "title_in_source": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
+  "title_in_source": "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
 }

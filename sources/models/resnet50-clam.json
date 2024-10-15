@@ -1,5 +1,5 @@
 {
   "model_type": "VisualHFModel",
-  "title": "Resnet50-CLAM",
+  "title": "resnet50-clam",
   "title_in_source":  "microsoft/resnet-50"
 }

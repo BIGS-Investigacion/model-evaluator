@@ -12,6 +12,7 @@ from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
 from tti_eval.model.types.hugging_face import HFModel
 
+
 class VisualHFModel(HFModel):
     def __init__(
         self,
