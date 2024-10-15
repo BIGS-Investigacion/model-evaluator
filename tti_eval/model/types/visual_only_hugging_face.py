@@ -10,11 +10,9 @@ from transformers import AutoProcessor as HF_AutoProcessor
 
 from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
-from tti_eval.model import Model
+from tti_eval.model.types.hugging_face import HFModel
 
-
-#Hay que fijar el tema de la clase HFModel para trabajar con modelos visuales de Hugging Face
-class VisualHFModel(Model):
+class VisualHFModel(HFModel):
     def __init__(
         self,
         title: str,
@@ -26,16 +24,6 @@ class VisualHFModel(Model):
     ) -> None:
         super().__init__(title, device, title_in_source=title_in_source, cache_dir=cache_dir)
         self._setup(**kwargs)
-
-    def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
-        def process_fn(batch) -> dict[str, list[Any]]:
-            images = [i.convert("RGB") for i in batch["image"]]
-            batch["image"] = [
-                self.processor(images=[i], return_tensors="pt").to(self.device).pixel_values.squeeze() for i in images
-            ]
-            return batch
-
-        return process_fn
 
     def get_collate_fn(self) -> Callable[[Any], Any]:
         def collate_fn(examples) -> dict[str, torch.Tensor]:
