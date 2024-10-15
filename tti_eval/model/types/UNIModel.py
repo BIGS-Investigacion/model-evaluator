@@ -1,7 +1,8 @@
 import open_clip
+from transformers import AutoConfig
 
 from tti_eval.model.types.visual_only_hugging_face import VisualHFModel
-from transformers import AutoConfig
+
 
 class UNIModel(VisualHFModel):
     def __init__(
