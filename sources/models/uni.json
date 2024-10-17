@@ -1,5 +1,5 @@
 {
-  "model_type": "VisualHFModel",
+  "model_type": "UniModel",
   "title": "uni",
-  "title_in_source":  "MahmoodLab/UNI"
+  "title_in_source":  "hf-hub:MahmoodLab/UNI"
 }
