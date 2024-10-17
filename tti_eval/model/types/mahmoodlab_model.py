@@ -1,18 +1,19 @@
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 import timm
+import torch
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
-
-import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from tti_eval.model.types.hugging_face import HFModel
 from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
+from tti_eval.model.types.hugging_face import HFModel
 from tti_eval.model.types.open_clip_model import OpenCLIPModel
+
 
 class UniModel(HFModel):
     def __init__(
@@ -32,7 +33,7 @@ class UniModel(HFModel):
         # init_values need to be passed in to successfully load LayerScale parameters (e.g. - block.0.ls1.gamma)
         self.model = timm.create_model(self.title_in_source, pretrained=True, init_values=1e-5, dynamic_img_size=True)
         self.transform = create_transform(**resolve_data_config(self.model.pretrained_cfg, model=self.model))
-        
+
     def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
         def process_fn(batch) -> dict[str, list[Any]]:
             images = [i.convert("RGB") for i in batch["image"]]
@@ -59,7 +60,7 @@ class UniModel(HFModel):
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
-    
+
 class ConchModel(OpenCLIPModel):
     def __init__(
         self,
@@ -74,7 +75,7 @@ class ConchModel(OpenCLIPModel):
         self.pretrained = pretrained
         super().__init__(title, device, title_in_source=title_in_source, cache_dir=cache_dir, **kwargs)
         self._setup(**kwargs)
-        
+
     def _setup(self, **kwargs) -> None:
         self.model, _, self.processor = open_clip.create_model_and_transforms(
             model_name=self.title_in_source,
