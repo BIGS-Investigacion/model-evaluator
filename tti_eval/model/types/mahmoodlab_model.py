@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 import numpy as np
+import open_clip
 import timm
 import torch
 from timm.data import resolve_data_config
@@ -61,7 +62,7 @@ class UniModel(HFModel):
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
 
-class ConchModel(OpenCLIPModel):
+class CONCHModel(OpenCLIPModel):
     def __init__(
         self,
         title: str,
@@ -75,16 +76,6 @@ class ConchModel(OpenCLIPModel):
         self.pretrained = pretrained
         super().__init__(title, device, title_in_source=title_in_source, cache_dir=cache_dir, **kwargs)
         self._setup(**kwargs)
-
-    def _setup(self, **kwargs) -> None:
-        self.model, _, self.processor = open_clip.create_model_and_transforms(
-            model_name=self.title_in_source,
-            pretrained=self.pretrained,
-            cache_dir=self._cache_dir.as_posix(),
-            device=self.device,
-            **kwargs,
-        )
-        self.tokenizer = open_clip.get_tokenizer(model_name=self.title_in_source)
 
     def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
         def process_fn(batch) -> dict[str, list[Any]]:
@@ -107,6 +98,10 @@ class ConchModel(OpenCLIPModel):
             return {"image": torch_images, "labels": labels}
 
         return collate_fn
+
+    def _setup(self, **kwargs) -> None:
+        self.model, self.processor = open_clip.create_model_from_pretrained(self.title_in_source)
+        self.tokenizer = open_clip.get_tokenizer(model_name=self.title_in_source)
 
     def build_embedding(self, dataloader: DataLoader) -> tuple[EmbeddingArray, EmbeddingArray, ClassArray]:
         all_image_embeddings = []

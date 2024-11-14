@@ -1,5 +1,5 @@
 {
-  "model_type": "OpenCLIPModel",
+  "model_type": "CONCHModel",
   "title": "conch",
   "title_in_source": "hf-hub:MahmoodLab/CONCH"
 }

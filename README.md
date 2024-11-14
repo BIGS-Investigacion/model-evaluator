@@ -41,23 +41,30 @@ You can easily benchmark different models and datasets against each other. Here 
 > `tti-eval` requires [Python 3.10+](https://www.python.org/downloads/release/python-31014/) and [Poetry](https://python-poetry.org/docs/#installation).
 
 1. Clone the repository:
+
    ```
-   git clone https://github.com/encord-team/text-to-image-eval.git
+   git clone https://github.com/BIGS-Investigacion/model-evaluator
    ```
+
 2. Navigate to the project directory:
+
    ```
-   cd text-to-image-eval
+   cd model-evaluator
    ```
+
 3. Install the required dependencies:
+
    ```
    poetry shell
    poetry install
    ```
+
 4. Add environment variables:
+
    ```
    export TTI_EVAL_CACHE_PATH=$PWD/.cache
    export TTI_EVAL_OUTPUT_PATH=$PWD/output
-   export ENCORD_SSH_KEY_PATH=<path_to_the_encord_ssh_key_file>
+   export HF_TOKEN=<your token in huggingface>
    ```
 
 ## CLI Quickstart
@@ -307,7 +314,6 @@ _TODO_: Some more prose about what's the difference between implementations.
 
 | Model Title  | Implementation                    | Weights |
 | :----------- | :-------------------------------- | :------ |
-| rsicd-encord | [LocalOpenCLIP][local-model-impl] | -       |
 
 ### Add a Model from a Known Source
 
@@ -369,15 +375,23 @@ However, all embeddings previously built with that model will remain intact and 
 ## Set Up the Development Environment
 
 1. Create the virtual environment, add dev dependencies and set up pre-commit hooks.
+
    ```
    ./dev-setup.sh
    ```
+
 2. Add environment variables:
+
    ```
    export TTI_EVAL_CACHE_PATH=$PWD/.cache
    export TTI_EVAL_OUTPUT_PATH=$PWD/output
-   export ENCORD_SSH_KEY_PATH=<path_to_the_encord_ssh_key_file>
    export HF_TOKEN=<Your token in hugginface>
+   ```
+
+3. If you need to include special models like CONCH, modify the requirements of pip accordingly. E.g.,  add
+
+   ```
+   git+https://github.com/Mahmoodlab/CONCH.git
    ```
 
 ## Contributing
