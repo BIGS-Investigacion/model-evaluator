@@ -99,7 +99,9 @@ class CONCHModel(HFModel):
                 dataloader,
                 desc=f"Embedding ({_dataset.split}) {_dataset.title} dataset with {self.title}",
             ):
-                image_features = torch.cat([self.model.encode_image(image.to(self.device), proj_contrast=False, normalize=False) for image in batch["pixel_values"]])
+                image_features = torch.cat([self.model.encode_image(image.to(self.device), 
+                                                                    proj_contrast=False, normalize=False) 
+                                                                    for image in batch["pixel_values"]])
                 normalized_image_features = (image_features / image_features.norm(p=2, dim=-1, keepdim=True)).squeeze()
                 all_image_embeddings.append(normalized_image_features)
                 all_labels.append(batch["labels"])
