@@ -164,7 +164,7 @@ class CTransPathModel(VisualHFModel):
                 dataloader,
                 desc=f"Embedding ({_dataset.split}) {_dataset.title} dataset with {self.title}",
             ):
-                image_features = [self.model(image.to(self.device)).squeeze() 
+                image_features = [self.model(image.to(self.device)).squeeze()
                                   for image in batch["pixel_values"].unbind()]
                 image_features = torch.stack(image_features)
                 normalized_image_features = (image_features / image_features.norm(p=2, dim=-1, keepdim=True)).squeeze()
