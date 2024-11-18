@@ -76,7 +76,9 @@ class CONCHModel(HFModel):
         self._setup(**kwargs)
 
     def _setup(self, **kwargs) -> None:
-        self.model, self.processor = create_model_from_pretrained('conch_ViT-B-16', self.title_in_source, hf_auth_token=os.environ['HF_TOKEN'])
+        self.model, self.processor = create_model_from_pretrained('conch_ViT-B-16', 
+                                                                  self.title_in_source, 
+                                                                  hf_auth_token=os.environ['HF_TOKEN'])
 
     def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
         def process_fn(batch) -> dict[str, list[Any]]:

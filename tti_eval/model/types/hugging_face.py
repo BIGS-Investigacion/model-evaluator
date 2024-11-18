@@ -1,15 +1,12 @@
 from collections.abc import Callable
-
 from typing import Any
 
 import numpy as np
-
+import timm
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
-
 from tqdm import tqdm
-
 from transformers import AutoModel as HF_AutoModel
 from transformers import AutoProcessor as HF_AutoProcessor
 from transformers import AutoTokenizer as HF_AutoTokenizer
@@ -17,9 +14,6 @@ from transformers import AutoTokenizer as HF_AutoTokenizer
 from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
 from tti_eval.model import Model
-
-import timm
-
 
 
 class HFModel(Model):
@@ -125,7 +119,7 @@ class VisualHFModel(HFModel):
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
-    
+
 class CTransPathModel(VisualHFModel):
     def __init__(
         self,
@@ -147,9 +141,10 @@ class CTransPathModel(VisualHFModel):
         )
 
         self.transform = transforms.Compose(
-            [ transforms.Resize(256, interpolation=transforms.InterpolationMode.BICUBIC), 
-             transforms.CenterCrop(224), transforms.ToTensor(), transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),])
-    
+            [ transforms.Resize(256, interpolation=transforms.InterpolationMode.BICUBIC),
+             transforms.CenterCrop(224), transforms.ToTensor(), 
+             transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),])
+
     def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
         def process_fn(batch) -> dict[str, list[Any]]:
             images = [i.convert("RGB") for i in batch["image"]]
@@ -159,7 +154,7 @@ class CTransPathModel(VisualHFModel):
             return batch
 
         return process_fn
-    
+
     def build_embedding(self, dataloader: DataLoader) -> tuple[EmbeddingArray, EmbeddingArray, ClassArray]:
         all_image_embeddings = []
         all_labels = []
@@ -177,5 +172,5 @@ class CTransPathModel(VisualHFModel):
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
-    
-    
+
+
