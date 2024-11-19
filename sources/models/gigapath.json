@@ -1,5 +1,5 @@
 {
-  "model_type": "VisualHFModel",
+  "model_type": "GigaPathModel",
   "title": "gigapath",
-  "title_in_source": "prov-gigapath/prov-gigapath"
+  "title_in_source": "hf_hub:prov-gigapath/prov-gigapath"
 }

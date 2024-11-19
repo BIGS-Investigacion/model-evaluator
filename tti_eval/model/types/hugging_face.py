@@ -120,7 +120,7 @@ class VisualHFModel(HFModel):
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
 
-class CTransPathModel(VisualHFModel):
+class GigaPathModel(VisualHFModel):
     def __init__(
         self,
         title: str,

@@ -1,1 +1,5 @@
+# This file is used to install packages that are not available in the default pip repository
+# https://tia-toolbox.readthedocs.io/en/latest/installation.html
+# apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools
+# tiatoolbox
 git+https://github.com/Mahmoodlab/CONCH.git
