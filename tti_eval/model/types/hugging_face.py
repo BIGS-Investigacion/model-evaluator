@@ -1,12 +1,19 @@
 from collections.abc import Callable
+
 from typing import Any
 
 import numpy as np
+
 import timm
+
+from tti_eval.model.types.hugging_face_aux import ConvStem
+
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
+
 from tqdm import tqdm
+
 from transformers import AutoModel as HF_AutoModel
 from transformers import AutoProcessor as HF_AutoProcessor
 from transformers import AutoTokenizer as HF_AutoTokenizer
@@ -14,7 +21,6 @@ from transformers import AutoTokenizer as HF_AutoTokenizer
 from tti_eval.common import ClassArray, EmbeddingArray
 from tti_eval.dataset import Dataset
 from tti_eval.model import Model
-
 
 class HFModel(Model):
     def __init__(
@@ -119,7 +125,7 @@ class VisualHFModel(HFModel):
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
-
+    
 class GigaPathModel(VisualHFModel):
     def __init__(
         self,
@@ -139,12 +145,11 @@ class GigaPathModel(VisualHFModel):
         model_name=self.title_in_source,
         pretrained=True,
         )
-
         self.transform = transforms.Compose(
             [ transforms.Resize(256, interpolation=transforms.InterpolationMode.BICUBIC),
              transforms.CenterCrop(224), transforms.ToTensor(),
              transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),])
-
+        
     def get_transform(self) -> Callable[[dict[str, Any]], dict[str, list[Any]]]:
         def process_fn(batch) -> dict[str, list[Any]]:
             images = [i.convert("RGB") for i in batch["image"]]
@@ -173,3 +178,27 @@ class GigaPathModel(VisualHFModel):
         image_embeddings = torch.concatenate(all_image_embeddings).numpy(force=True)
         labels = torch.concatenate(all_labels).numpy(force=True).astype(np.int32)
         return image_embeddings, image_embeddings, labels
+
+class CTransPathModel(GigaPathModel):
+    def __init__(
+        self,
+        title: str,
+        device: str | None = None,
+        *,
+        title_in_source: str | None = None,
+        cache_dir: str | None = None,
+        **kwargs,
+    ) -> None:
+        super().__init__(title, device, title_in_source=title_in_source, cache_dir=cache_dir)
+        self._setup(**kwargs)
+
+    def _setup(self, **kwargs) -> None:
+        # load model from the hub
+        self.model = timm.create_model(
+        model_name=self.title_in_source,
+        embed_layer=ConvStem, #  defined above
+        pretrained=True,
+        )
+        # get model specific transforms (normalization, resize)
+        data_config = timm.data.resolve_model_data_config(self.model)
+        self.transform = timm.data.create_transform(**data_config, is_training=False)
