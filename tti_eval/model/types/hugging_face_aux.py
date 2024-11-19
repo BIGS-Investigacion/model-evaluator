@@ -1,6 +1,7 @@
 import torch.nn as nn
 from timm.layers.helpers import to_2tuple
 
+
 class ConvStem(nn.Module):
     """Custom Patch Embed Layer.
 
@@ -25,7 +26,7 @@ class ConvStem(nn.Module):
         # Create stem network
         stem = []
         input_dim, output_dim = 3, embed_dim // 8
-        for l in range(2):
+        for _ in range(2):
             stem.append(nn.Conv2d(input_dim, output_dim, kernel_size=3, stride=2, padding=1, bias=False))
             stem.append(nn.BatchNorm2d(output_dim))
             stem.append(nn.ReLU(inplace=True))
