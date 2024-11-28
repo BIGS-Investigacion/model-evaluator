@@ -1,6 +1,0 @@
-{
-  "dataset_type": "HFDataset",
-  "title": "skin-cancer",
-  "title_in_source": "marmal88/skin_cancer",
-  "target_feature": "dx"
-}
